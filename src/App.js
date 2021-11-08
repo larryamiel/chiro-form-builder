@@ -1,40 +1,28 @@
-import React, { useState } from 'react';
-import Container from '@mui/material/Container'
-import Box from '@mui/material/Box';
-import Grid from '@mui/material/Grid'
+import React from 'react';
 
-import FormBuilder from './components/FormBuilder';
-import FormPreview from './components/FormPreview';
-import { Button } from '@mui/material';
+import { BrowserRouter as Router } from 'react-router-dom';
+import { StateMachineProvider, createStore } from 'little-state-machine';
 
-function FormComponent ({ form, setForm, mode }) {
-  if (mode === 'builder') return <FormBuilder setForm={setForm} form={form} />
-  else if (mode === 'preview') return <FormPreview form={mode} />
-  else return;
-}
+import BaseLayout from './layouts/BaseLayout';
+import PageRoutes from './PageRoutes';
 
-function App({ ...props }) {
-  const [form, setForm] = useState([{}]);
-  const [mode, setMode] = useState('builder');
+import '@fontsource/roboto/300.css';
 
-  const handleMode = (mode) => setMode(mode);
+createStore({
+  fieldGroups: {}
+}, {
+  storageType: window.localStorage
+});
 
+function App() {
   return (
-    <Container fixed>
-      <Grid>
-        <Button onClick={e => handleMode('builder')}>
-          Form Builder
-        </Button>
-
-        <Button onClick={e => handleMode('preview')}>
-          Form Preview
-        </Button>
-      </Grid>
-
-      <Box mt={5}>
-        <FormComponent form={form} setForm={setForm} mode={mode} />
-      </Box>
-    </Container>
+    <StateMachineProvider>
+      <Router>
+        <BaseLayout>
+          <PageRoutes />
+        </BaseLayout>
+      </Router>
+    </StateMachineProvider>
   );
 }
 
